@@ -1,196 +1,162 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Война в Афганистане</title>
-  <meta name="description" content="война в Афганистане.">
-  <style>:root{--bg:#0f1724;--card:#0b1220;--muted:#9aa6b2;--accent:#b3512f;--glass:rgba(255,255,255,0.04)}
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Война в Афганистане — SPA</title>
+  <meta name="description" content="Краткий путеводитель по войне в Афганистане. SPA на чистом JS, галерея, хронология, статьи и команды." />
+  <style>
+    :root{
+      --bg:#0f1724; --card:#0b1220; --muted:#9aa6b2; --accent:#b3512f; --glass:rgba(255,255,255,0.04);
+      --radius:10px;
+    }
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;color:#e6eef6;background:linear-gradient(180deg,#071125 0%, #0f1724 100%);-webkit-font-smoothing:antialiased}
+    body{margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial;background:linear-gradient(180deg,#071125 0%, #0f1724 100%);color:#e6eef6;-webkit-font-smoothing:antialiased}
     header{display:flex;align-items:center;gap:16px;padding:18px 20px;border-bottom:1px solid rgba(255,255,255,0.03);backdrop-filter:blur(6px)}
     .brand{display:flex;align-items:center;gap:12px}
-    .logo{width:46px;height:46px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#7a2b2b);display:flex;align-items:center;justify-content:center;font-weight:700;color:#071125}
-    nav{display:flex;gap:12px;margin-left:18px}
-    a.navlink{color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:8px;font-weight:600}
-    a.navlink.active{background:var(--glass);color:#fff}
+    .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#7a2b2b);display:flex;align-items:center;justify-content:center;font-weight:800;color:#071125;font-size:14px}
+    nav{display:flex;gap:10px;margin-left:18px}
+    nav a{color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:8px;font-weight:600}
+    nav a.active{background:var(--glass);color:#fff}
     main{padding:28px;max-width:1100px;margin:20px auto}
-    .grid{display:grid;gap:18px}
     .hero{display:flex;gap:20px;align-items:center;padding:22px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));box-shadow:0 6px 20px rgba(2,6,23,0.6)}
     .hero h1{margin:0;font-size:28px}
     .meta{color:var(--muted);margin-top:8px}
-    .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:18px}
-    .card{background:var(--card);padding:16px;border-radius:10px;box-shadow:0 6px 16px rgba(2,6,23,0.5)}
+    .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:18px}
+    .card{background:var(--card);padding:16px;border-radius:var(--radius);box-shadow:0 6px 16px rgba(2,6,23,0.5)}
     .timeline{padding:10px}
     .event{display:flex;gap:12px;padding:12px;border-radius:8px;background:linear-gradient(90deg, rgba(255,255,255,0.01), transparent)}
     .event .year{min-width:70px;font-weight:700;color:var(--accent)}
     .gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
     .thumb{position:relative;padding-top:60%;border-radius:8px;overflow:hidden;background:#071125;display:block}
     .thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-    footer{color:var(--muted);text-align:center;padding:30px 10px}
-    /* modal */
-    .modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(2,6,23,0.6);backdrop-filter:blur(4px);z-index:60}
-    .modal .box{max-width:920px;width:92%;background:#081223;padding:18px;border-radius:12px}
-    .btn{display:inline-block;padding:8px 12px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);cursor:pointer}
-    .controls{display:flex;gap:8px;align-items:center}
-    input.search{padding:8px 12px;border-radius:10px;border:0;background:#071426;color:#fff;width:260px}
-    /* teams */
-    .team-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-    .member{padding:12px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00))}
     .muted-small{color:var(--muted);font-size:13px}
-    /* responsive */
+    footer{color:var(--muted);text-align:center;padding:30px 10px}
+    .btn{display:inline-block;padding:8px 12px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);cursor:pointer}
+    input[type="text"], input[type="url"]{padding:8px 10px;border-radius:8px;border:0;background:#071426;color:#fff}
     @media (max-width:720px){header{flex-wrap:wrap} .hero{flex-direction:column;align-items:flex-start}}
-    /* subtle animations */
-    .fade-in{animation:fade .45s ease both}
-    @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
   </style>
 </head>
 <body>
 <header>
-  <div class="brand">
-    <div class="logo">Афг</div>
+  <div class="brand" aria-hidden="false">
+    <div class="logo" aria-hidden="true">АФГ</div>
     <div>
       <div style="font-weight:700">Война в Афганистане</div>
-      <div style="font-size:12px;color:var(--muted)">Чистый JS • Hash-routing • SPA</div>
     </div>
   </div>
 
-  <nav aria-label="Главная навигация">
-    <a class="navlink" href="#home">Главная</a>
-    <a class="navlink" href="#timeline">Хронология</a>
-    <a class="navlink" href="#gallery">Галерея</a>
-    <a class="navlink" href="#articles">Статьи</a>
-    <a class="navlink" href="#teams">Команды</a>
-  </nav>
-
   <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
-    <input class="search" id="globalSearch" aria-label="Поиск по сайту" placeholder="Поиск статей...">
+    <label for="globalSearch" class="visually-hidden" style="position:absolute;left:-9999px">Поиск</label>
+    <input id="globalSearch" type="text" placeholder="Поиск статей..." />
     <button class="btn" id="themeToggle" aria-pressed="false">Тема</button>
   </div>
 </header>
 
 <main id="app" role="main">
-</main>
-
-
-<template id="home-tpl">
-  <section class="hero fade-in">
+  <section class="hero" id="home">
     <div style="flex:1">
       <h1>Война в Афганистане — краткий путеводитель</h1>
-      <div class="meta">Интерактивная одностраничная аппа: хронология, галерея, статьи и информация по командам. Ничего лишнего — чистый JS.</div>
-      <div class="cards">
+      <p class="meta">Интерактивная одностраничная аппа: хронология, галерея, статьи и информация по командам. Ничего лишнего — чистый JS.</p>
+
+      <div class="cards" aria-hidden="false">
         <article class="card">
           <h3>Хронология</h3>
-          <p class="muted-small">Интерактивные события по годам — нажмите, чтобы раскрыть детали.</p>
+          <p class="muted-small">Интерактивные события по годам — нажмите на пункт для деталей.</p>
         </article>
+
         <article class="card">
           <h3>Галерея</h3>
-          <p class="muted-small">Фотографии лежат в папке <code>IMG</code> — укажите имена файлов для точной привязки.</p>
+          <p class="muted-small">Фотографии из папки <code>IMG/</code>. Нажмите для просмотра в полном размере.</p>
         </article>
+
         <article class="card">
           <h3>Команды</h3>
-          <p class="muted-small">Ссылка на репозиторий лидера команды тут же — проверьте историю коммитов.</p>
+          <p class="muted-small">Лид команды должен добавить ссылку на git-репозиторий. История коммитов должна быть прозрачной.</p>
         </article>
       </div>
     </div>
-    <div style="width:320px">
-      <div class="card" style="padding:14px">
+
+    <aside style="width:320px">
+      <div class="card">
         <h4>Быстрый поиск</h4>
-        <p class="muted-small">Искать можно по заголовкам статей и событиям хронологии.</p>
-        <div style="margin-top:8px" class="controls">
-          <button class="btn" id="btnTimeline">Перейти к хронологии</button>
-          <button class="btn" id="btnGallery">Перейти в галерею</button>
+        <p class="muted-small">Ищите по заголовкам статей и событиям хронологии (Enter).</p>
+        <div style="margin-top:12px;display:flex;gap:8px">
+          <a class="btn" href="#timeline">Хронология</a>
+          <a class="btn" href="#gallery">Галерея</a>
         </div>
       </div>
+    </aside>
+  </section>
+
+  <section class="card" id="static-timeline" style="margin-top:18px;">
+    <h2>Хронология (выдержки)</h2>
+    <div class="timeline">
+      <div class="event"><div class="year">1979</div><div><strong>Ввод советских войск</strong><div class="muted-small">Декабрь 1979 — ввод ограниченного контингента.</div></div></div>
+      <div class="event"><div class="year">1988</div><div><strong>Женевские соглашения</strong><div class="muted-small">Подписание соглашений, начато выведение войск.</div></div></div>
+      <div class="event"><div class="year">1989</div><div><strong>Вывод войск</strong><div class="muted-small">15 февраля 1989 — завершение вывода.</div></div></div>
     </div>
   </section>
-</template>
 
-<template id="timeline-tpl">
-  <section>
-    <h2>Хронология</h2>
-    <div class="card timeline" id="timelineList"></div>
-  </section>
-</template>
-
-<template id="gallery-tpl">
-  <section>
+  <section style="margin-top:18px;">
     <h2>Галерея</h2>
-    <div class="card">
-      <div class="gallery" id="galleryGrid"></div>
+    <div class="gallery">
+      <a class="thumb" href="IMG/USAMarines.jpg"><img src="IMG/USAMarines.jpg" alt="US Marines"></a>
+      <a class="thumb" href="IMG/A10.jpg"><img src="IMG/A10.jpg" alt="A-10 Thunderbolt"></a>
+      <a class="thumb" href="IMG/USANDTAL.jpg"><img src="IMG/USANDTAL.jpg" alt="Патруль в горах"></a>
+      <a class="thumb" href="IMG/Aftermath.jpg"><img src="IMG/Aftermath.jpg" alt="Последствия боёв"></a>
     </div>
   </section>
-</template>
-
-<template id="articles-tpl">
-  <section>
+  <section style="margin-top:18px;">
     <h2>Статьи</h2>
-    <div class="card" id="articlesList"></div>
+    <div class="card">
+      <article style="margin-bottom:12px">
+        <h3>Краткая хронология 1979–1989</h3>
+        <p class="muted-small">Обзор ключевых событий советского контингента и афганского конфликта.</p>
+      </article>
+      <article style="margin-bottom:12px">
+        <h3>Жизнь тыла и логистика</h3>
+        <p class="muted-small">Эвакуация, снабжение и роль инфраструктуры.</p>
+      </article>
+      <article>
+        <h3>Военная техника и тактика</h3>
+        <p class="muted-small">Как рельеф и техника влияли на операции.</p>
+      </article>
+    </div>
   </section>
-</template>
 
-<template id="teams-tpl">
-  <section>
+  <!-- Команды -->
+  <section style="margin-top:18px;">
     <h2>Команды</h2>
-    <p class="muted-small">У лидера вашей команды должен быть git репозиторий. Пожалуйста, вставьте ссылку на репо и краткую заметку про историю коммитов.</p>
-    <div class="card team-list" id="teamList"></div>
-    <div class="card" style="margin-top:12px">
-      <h3>Контрольный список для лида</h3>
-      <ol class="muted-small">
-        <li>Создать публичный git-репозиторий (GitHub/GitLab/Bitbucket).</li>
-        <li>Заполнить README с описанием проекта и инструкцией по запуску.</li>
-        <li>Сделать понятную историю коммитов (feature/commit messages).</li>
-        <li>Вставить ссылку на репо в поле "Ссылка на репозиторий" ниже.</li>
-      </ol>
-      <div style="margin-top:8px">
-        <input id="repoInput" placeholder="https://github.com/ваш-логин/репо" style="width:70%;padding:8px;border-radius:8px;border:0;background:#071426;color:#fff">
-        <button class="btn" id="saveRepo">Сохранить ссылку</button>
+    <div class="card">
+      <div style="display:grid;grid-gap:10px">
+        <div style="padding:10px;border-radius:8px;background:rgba(255,255,255,0.01)">
+          <strong>Команда "Фронт"</strong>
+          <div class="muted-small">Лидер: Иван Иванов</div>
+          <div class="muted-small">Репо: — не задано —</div>
+        </div>
+        <div style="padding:10px;border-radius:8px;background:rgba(255,255,255,0.01)">
+          <strong>Команда "Дозор"</strong>
+          <div class="muted-small">Лидер: Мария Сидорова</div>
+          <div class="muted-small">Репо: — не задано —</div>
+        </div>
+      </div>
+
+      <div style="margin-top:12px">
+        <label for="repoInput" class="muted-small">Ссылка на репозиторий лидера</label><br>
+        <input id="repoInput" type="url" placeholder="https://github.com/ваш-логин/репо" style="width:60%;margin-top:6px">
+        <button class="btn" id="saveRepo" style="margin-left:8px">Сохранить</button>
       </div>
     </div>
   </section>
-</template>
+</main>
+<!-- Подключаем JS: сначала данные, затем логика -->
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
 
-<!-- modal placeholder -->
-<div id="modalRoot" hidden></div>
-
-<script>
-  // ======= ДАННЫЕ (замените / расширьте сами) =======
-  const DATA = {
-    timeline: [
-      {year: 1979, title: 'Ввод советских войск', detail: 'Декабрь 1979 — ввод ограниченного контингента советских войск в Демократическую Республику Афганистан.'},
-      {year: 1980, title: 'Кампания и сопротивление', detail: 'Усиление сопротивления моджахедов, расширение партизанских операций.'},
-      {year: 1985, title: 'Эскалация и международный фон', detail: 'Увеличение масштабов боевых действий; рост международного внимания.'},
-      {year: 1988, title: 'Женевские соглашения', detail: 'Подписание соглашений, начато выведение советских войск.'},
-      {year: 1989, title: 'Вывод войск', detail: '15 февраля 1989 — завершение вывода советских войск из Афганистана.'}
-    ],
-    gallery: [
-      {title:'', src:'IMG/USAMarines.jpg'},
-      {title:'A-10 thunderbolt', src:'IMG/A10.jpg'},
-      {title:'Патруль в горах', src:'IMG/USANDTAL.jpg'},
-      {title:'Местные жители и войска', src:'IMG/Aftermath.jpg'}
-    ],
-    articles: [
-      {id:1, title:'Краткая хронология 1979–1989', body:'Обзор ключевых событий советского контингента и афганского конфликта.'},
-      {id:2, title:'Жизнь тыла и логистика', body:'Эвакуация, снабжение и роль инфраструктуры.'},
-      {id:3, title:'Военная техника и тактика', body:'Как рельеф и техника влияли на операции.'}
-    ],
-    teams: [
-      {name:'Команда "Фронт"', leader:'Иван Иванов', repo:''},
-      {name:'Команда "Дозор"', leader:'Мария Сидорова', repo:''}
-    ]
-  }
-
-  const routes = {
-    '': renderHome,
-    '#home': renderHome,
-    '#timeline': renderTimeline,
-    '#gallery': renderGallery,
-    '#articles': renderArticles,
-    '#teams': renderTeams
-  }
-
-
-</script>
+<noscript>
+  <div style="background:#2b333f;color:#fff;padding:12px;text-align:center">Для интерактивных функций (поиск, галерея в лайтбоксе, SPA-навигация) включите JavaScript.</div>
+</noscript>
 </body>
 </html>
