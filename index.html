@@ -1,52 +1,32 @@
 <!doctype html>
 <html lang="ru">
 <head>
+<<<<<<< HEAD
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Война в Афганистане — SPA (чистый JS)</title>
   <meta name="description" content="Мини-SPA про войну в Афганистане. Без фреймворков, только HTML/CSS/JS.">
   <style>:root{--bg:#0f1724;--card:#0b1220;--muted:#9aa6b2;--accent:#b3512f;--glass:rgba(255,255,255,0.04)}
+=======
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Война в Афганистане — SPA</title>
+  <meta name="description" content="SPA: вся структура страницы генерируется из JS" />
+  <style>
+    :root{
+      --bg:#0f1724; --card:#0b1220; --muted:#9aa6b2; --accent:#b3512f; --glass:rgba(255,255,255,0.04);
+      --radius:10px;
+    }
+>>>>>>> 2a548e6bd885310d27b41bae73d5e12c6251b272
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;color:#e6eef6;background:linear-gradient(180deg,#071125 0%, #0f1724 100%);-webkit-font-smoothing:antialiased}
-    header{display:flex;align-items:center;gap:16px;padding:18px 20px;border-bottom:1px solid rgba(255,255,255,0.03);backdrop-filter:blur(6px)}
-    .brand{display:flex;align-items:center;gap:12px}
-    .logo{width:46px;height:46px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#7a2b2b);display:flex;align-items:center;justify-content:center;font-weight:700;color:#071125}
-    nav{display:flex;gap:12px;margin-left:18px}
-    a.navlink{color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:8px;font-weight:600}
-    a.navlink.active{background:var(--glass);color:#fff}
-    main{padding:28px;max-width:1100px;margin:20px auto}
-    .grid{display:grid;gap:18px}
-    .hero{display:flex;gap:20px;align-items:center;padding:22px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));box-shadow:0 6px 20px rgba(2,6,23,0.6)}
-    .hero h1{margin:0;font-size:28px}
-    .meta{color:var(--muted);margin-top:8px}
-    .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:18px}
-    .card{background:var(--card);padding:16px;border-radius:10px;box-shadow:0 6px 16px rgba(2,6,23,0.5)}
-    .timeline{padding:10px}
-    .event{display:flex;gap:12px;padding:12px;border-radius:8px;background:linear-gradient(90deg, rgba(255,255,255,0.01), transparent)}
-    .event .year{min-width:70px;font-weight:700;color:var(--accent)}
-    .gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
-    .thumb{position:relative;padding-top:60%;border-radius:8px;overflow:hidden;background:#071125;display:block}
-    .thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-    footer{color:var(--muted);text-align:center;padding:30px 10px}
-    /* modal */
-    .modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(2,6,23,0.6);backdrop-filter:blur(4px);z-index:60}
-    .modal .box{max-width:920px;width:92%;background:#081223;padding:18px;border-radius:12px}
-    .btn{display:inline-block;padding:8px 12px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);cursor:pointer}
-    .controls{display:flex;gap:8px;align-items:center}
-    input.search{padding:8px 12px;border-radius:10px;border:0;background:#071426;color:#fff;width:260px}
-    /* teams */
-    .team-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-    .member{padding:12px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00))}
-    .muted-small{color:var(--muted);font-size:13px}
-    /* responsive */
-    @media (max-width:720px){header{flex-wrap:wrap} .hero{flex-direction:column;align-items:flex-start}}
-    /* subtle animations */
-    .fade-in{animation:fade .45s ease both}
-    @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+    body{margin:0;background:linear-gradient(180deg,#071125 0%, #0f1724 100%);color:#e6eef6;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial}
+    #app{max-width:1100px;margin:20px auto;padding:16px}
+    .btn{padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--muted);cursor:pointer}
   </style>
 </head>
 <body>
+<<<<<<< HEAD
 <header>
   <div class="brand">
     <div class="logo">Афг</div>
@@ -311,5 +291,10 @@
     router()
   })
 </script>
+=======
+<div id="app"></div>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+>>>>>>> 2a548e6bd885310d27b41bae73d5e12c6251b272
 </body>
 </html>
