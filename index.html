@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Война в Афганистане</title>
-  <meta name="description" content="война в Афганистане.">
+  <title>Война в Афганистане — SPA (чистый JS)</title>
+  <meta name="description" content="Мини-SPA про войну в Афганистане. Без фреймворков, только HTML/CSS/JS.">
   <style>:root{--bg:#0f1724;--card:#0b1220;--muted:#9aa6b2;--accent:#b3512f;--glass:rgba(255,255,255,0.04)}
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -51,11 +51,10 @@
   <div class="brand">
     <div class="logo">Афг</div>
     <div>
-      <div style="font-weight:700">Война в Афганистане</div>
+      <div style="font-weight:700">Война в Афганистане — мини-SPA</div>
       <div style="font-size:12px;color:var(--muted)">Чистый JS • Hash-routing • SPA</div>
     </div>
   </div>
-
   <nav aria-label="Главная навигация">
     <a class="navlink" href="#home">Главная</a>
     <a class="navlink" href="#timeline">Хронология</a>
@@ -63,17 +62,17 @@
     <a class="navlink" href="#articles">Статьи</a>
     <a class="navlink" href="#teams">Команды</a>
   </nav>
-
   <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
     <input class="search" id="globalSearch" aria-label="Поиск по сайту" placeholder="Поиск статей...">
     <button class="btn" id="themeToggle" aria-pressed="false">Тема</button>
   </div>
 </header>
-
 <main id="app" role="main">
+  <!-- content will be injected here -->
 </main>
-
-
+<footer>
+  <div>Сделано на чистом JavaScript — без фреймворков. В репозитории команды должен быть git с прозрачной историей.</div>
+</footer>
 <template id="home-tpl">
   <section class="hero fade-in">
     <div style="flex:1">
@@ -106,14 +105,12 @@
     </div>
   </section>
 </template>
-
 <template id="timeline-tpl">
   <section>
     <h2>Хронология</h2>
     <div class="card timeline" id="timelineList"></div>
   </section>
 </template>
-
 <template id="gallery-tpl">
   <section>
     <h2>Галерея</h2>
@@ -122,14 +119,12 @@
     </div>
   </section>
 </template>
-
 <template id="articles-tpl">
   <section>
     <h2>Статьи</h2>
     <div class="card" id="articlesList"></div>
   </section>
 </template>
-
 <template id="teams-tpl">
   <section>
     <h2>Команды</h2>
@@ -150,12 +145,9 @@
     </div>
   </section>
 </template>
-
 <!-- modal placeholder -->
 <div id="modalRoot" hidden></div>
-
 <script>
-  // ======= ДАННЫЕ (замените / расширьте сами) =======
   const DATA = {
     timeline: [
       {year: 1979, title: 'Ввод советских войск', detail: 'Декабрь 1979 — ввод ограниченного контингента советских войск в Демократическую Республику Афганистан.'},
@@ -180,7 +172,6 @@
       {name:'Команда "Дозор"', leader:'Мария Сидорова', repo:''}
     ]
   }
-
   const routes = {
     '': renderHome,
     '#home': renderHome,
@@ -189,8 +180,136 @@
     '#articles': renderArticles,
     '#teams': renderTeams
   }
-
-
+  const app = document.getElementById('app')
+  function navigate(hash){
+    location.hash = hash
+  }
+  function setActiveNav(){
+    document.querySelectorAll('a.navlink').forEach(a=>{
+      a.classList.toggle('active', a.getAttribute('href') === location.hash || (location.hash==='' && a.getAttribute('href')==='#home'))
+    })
+  }
+  // ======= RENDERERS =======
+  function renderHome(){
+    const tpl = document.getElementById('home-tpl').content.cloneNode(true)
+    app.innerHTML = ''
+    app.appendChild(tpl)
+    document.getElementById('btnTimeline').addEventListener('click',()=>navigate('#timeline'))
+    document.getElementById('btnGallery').addEventListener('click',()=>navigate('#gallery'))
+  }
+  function renderTimeline(){
+    const tpl = document.getElementById('timeline-tpl').content.cloneNode(true)
+    app.innerHTML = ''
+    app.appendChild(tpl)
+    const list = document.getElementById('timelineList')
+    DATA.timeline.sort((a,b)=>a.year-b.year).forEach(ev=>{
+      const el = document.createElement('div'); el.className='event'
+      el.innerHTML = `<div class="year">${ev.year}</div><div><strong>${escapeHtml(ev.title)}</strong><div class="muted-small">${escapeHtml(ev.detail)}</div></div>`
+      el.addEventListener('click', ()=> openModal(`<h3>${escapeHtml(ev.title)} — ${ev.year}</h3><p>${escapeHtml(ev.detail)}</p>`))
+      list.appendChild(el)
+    })
+  }
+  function renderGallery(){
+    const tpl = document.getElementById('gallery-tpl').content.cloneNode(true)
+    app.innerHTML = ''
+    app.appendChild(tpl)
+    const grid = document.getElementById('galleryGrid')
+    DATA.gallery.forEach(item=>{
+      const a = document.createElement('a'); a.className='thumb'; a.href='#';
+      a.innerHTML = `<img alt="${escapeHtml(item.title)}" src="${item.src}">`
+      a.addEventListener('click',(e)=>{e.preventDefault(); openModal(`<h3>${escapeHtml(item.title)}</h3><img style='max-width:100%;display:block;margin-top:12px' src='${item.src}'>`)} )
+      grid.appendChild(a)
+    })
+  }
+  function renderArticles(){
+    const tpl = document.getElementById('articles-tpl').content.cloneNode(true)
+    app.innerHTML = ''
+    app.appendChild(tpl)
+    const list = document.getElementById('articlesList')
+    DATA.articles.forEach(a=>{
+      const div = document.createElement('div'); div.className='card'; div.style.marginBottom='8px'
+      div.innerHTML = `<h3>${escapeHtml(a.title)}</h3><p class='muted-small'>${escapeHtml(a.body)}</p><div style='margin-top:8px'><button class='btn' data-id='${a.id}'>Открыть</button></div>`
+      div.querySelector('button').addEventListener('click', ()=> openModal(`<h3>${escapeHtml(a.title)}</h3><p>${escapeHtml(a.body)}</p>`))
+      list.appendChild(div)
+    })
+  }
+  function renderTeams(){
+    const tpl = document.getElementById('teams-tpl').content.cloneNode(true)
+    app.innerHTML = ''
+    app.appendChild(tpl)
+    const list = document.getElementById('teamList')
+    DATA.teams.forEach((m, idx)=>{
+      const d = document.createElement('div'); d.className='member'
+      d.innerHTML = `<strong>${escapeHtml(m.name)}</strong><div class='muted-small'>Лидер: ${escapeHtml(m.leader)}</div><div style='margin-top:8px'>
+        <div class='muted-small'>Ссылка на репозиторий:</div>
+        <a href='${m.repo||"#"}' target='_blank' rel='noopener noreferrer' class='muted-small' data-idx='${idx}'>${m.repo||'— не задано —'}</a>
+      </div>`
+      list.appendChild(d)
+    })
+    document.getElementById('saveRepo').addEventListener('click', ()=>{
+      const val = document.getElementById('repoInput').value.trim()
+      if(!val){alert('Вставьте ссылку на репозиторий');return}
+      DATA.teams[0].repo = val
+      // простая перерисовка
+      renderTeams()
+      alert('Ссылка сохранена в локальном состоянии страницы. Для финала: добавьте её в README проекта в гите.')
+    })
+  }
+  // ======= Modal =======
+  function openModal(html){
+    const root = document.getElementById('modalRoot')
+    root.hidden = false
+    root.innerHTML = `<div class='modal' role='dialog' aria-modal='true'><div class='box'>${html}<div style='margin-top:12px;text-align:right'><button class='btn' id='closeModal'>Закрыть</button></div></div></div>`
+    document.getElementById('closeModal').addEventListener('click', closeModal)
+    document.querySelector('.modal').addEventListener('click', (e)=>{ if(e.target.classList.contains('modal')) closeModal() })
+  }
+  function closeModal(){ const root = document.getElementById('modalRoot'); root.hidden = true; root.innerHTML = '' }
+  // ======= Search =======
+  function searchAll(q){
+    q = q.toLowerCase().trim()
+    if(!q) return
+    const results = []
+    DATA.articles.forEach(a=>{ if(a.title.toLowerCase().includes(q) || a.body.toLowerCase().includes(q)) results.push({type:'article', item:a}) })
+    DATA.timeline.forEach(t=>{ if(t.title.toLowerCase().includes(q) || t.detail.toLowerCase().includes(q)) results.push({type:'timeline', item:t}) })
+    if(results.length===0){ openModal(`<h3>Ничего не найдено</h3><p>По запросу «${escapeHtml(q)}» результатов нет.</p>`); return }
+    const html = results.map(r=>`<div style='padding:8px;border-bottom:1px solid rgba(255,255,255,0.02)'><strong>${escapeHtml(r.item.title||r.item.year)}</strong><div class='muted-small'>${escapeHtml(r.item.detail||r.item.body||'')}</div><div style='margin-top:6px'><button class='btn' data-type='${r.type}'>Открыть</button></div></div>`).join('')
+    openModal(html)
+    // open handlers
+    document.querySelectorAll('#modalRoot .btn[data-type]').forEach(b=>b.addEventListener('click', (e)=>{
+      const type = e.currentTarget.getAttribute('data-type')
+      closeModal(); navigate(type==='article'?'#articles':'#timeline')
+    }))
+  }
+  // ======= Helpers =======
+  function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') }
+  // ======= Bootstrap =======
+  function router(){
+    const hash = location.hash || '#home'
+    setActiveNav()
+    const handler = routes[hash] || renderHome
+    handler()
+  }
+  window.addEventListener('hashchange', router)
+  window.addEventListener('load', ()=>{
+    // wire up global search
+    document.getElementById('globalSearch').addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ searchAll(e.target.value) } })
+    document.getElementById('themeToggle').addEventListener('click', ()=>{
+      const pressed = document.getElementById('themeToggle').getAttribute('aria-pressed') === 'true'
+      document.getElementById('themeToggle').setAttribute('aria-pressed', String(!pressed))
+      document.body.style.background = pressed ? 'linear-gradient(180deg,#071125 0%, #0f1724 100%)' : 'linear-gradient(180deg,#f7f8fb 0%, #e9eef6 100%)'
+      document.body.style.color = pressed ? '#e6eef6':'#071125'
+    })
+    // quick navigation buttons on home
+    document.getElementById('btnTimeline')?.addEventListener('click', ()=> navigate('#timeline'))
+    document.getElementById('btnGallery')?.addEventListener('click', ()=> navigate('#gallery'))
+    // fill teams from DATA
+    // store teams to localStorage for persistence during development
+    const saved = localStorage.getItem('ww_spa_data')
+    if(saved){ try{ const parsed = JSON.parse(saved); if(parsed.teams) DATA.teams = parsed.teams }catch(e){} }
+    // autosave every change (very light)
+    window.addEventListener('beforeunload', ()=> localStorage.setItem('ww_spa_data', JSON.stringify({teams:DATA.teams})))
+    router()
+  })
 </script>
 </body>
 </html>
